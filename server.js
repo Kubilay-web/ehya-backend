@@ -1,44 +1,56 @@
-import express from "express";
-import dotenv from "dotenv";
-import path from "path";
-import connectDB from "./config/db.js";
-import cors from "cors";
-import {
+const express = require("express");
+const dotenv = require("dotenv");
+const path = require("path");
+const connectDB = require("./config/db");
+const cors = require("cors");
+const {
   errorResponserHandler,
   invalidPathHandler,
-} from "./middleware/errorHandler.js";
+} = require("./middleware/errorHandler");
 
 // Routes
-import userRoutes from "./routes/userRoutes.js";
-import postRoutes from "./routes/postRoutes.js";
-import commentRoutes from "./routes/commentRoutes.js";
-import postCategoriesRoutes from "./routes/postCategoriesRoutes.js";
+const userRoutes = require("./routes/userRoutes");
+const postRoutes = require("./routes/postRoutes");
+const commentRoutes = require("./routes/commentRoutes");
+const postCategoriesRoutes = require("./routes/postCategoriesRoutes");
 
+// Load environment variables
 dotenv.config();
+
+// Connect to database
 connectDB();
+
 const app = express();
 app.use(express.json());
 
+// CORS options
 const corsOptions = {
   exposedHeaders: "*",
 };
 
 app.use(cors(corsOptions));
 
+// Basic route
 app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 
+// Route definitions
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/post-categories", postCategoriesRoutes);
 
+// Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
+// Invalid path and error handling
 app.use(invalidPathHandler);
 app.use(errorResponserHandler);
 
+// Start server
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
+// Export app for testing (optional)
+module.exports = app;

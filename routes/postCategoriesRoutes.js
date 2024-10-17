@@ -1,23 +1,27 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+
+const {
   createPostCategory,
   deletePostCategory,
   getAllPostCategories,
   updatePostCategory,
   getSingleCategory,
-} from "../controllers/postCategoriesController.js";
-import { adminGuard, authGuard } from "../middleware/authMiddleware.js";
+} = require("../controllers/postCategoriesController");
 
+const { adminGuard, authGuard } = require("../middleware/authMiddleware");
+
+// Post kategorileri için yönlendirme
 router
   .route("/")
-  .post(authGuard, adminGuard, createPostCategory)
-  .get(getAllPostCategories);
+  .post(authGuard, adminGuard, createPostCategory) // Kategori oluştur
+  .get(getAllPostCategories); // Tüm kategorileri getir
 
 router
   .route("/:postCategoryId")
-  .get(getSingleCategory)
-  .put(authGuard, adminGuard, updatePostCategory)
-  .delete(authGuard, adminGuard, deletePostCategory);
+  .get(getSingleCategory) // Belirli bir kategoriyi getir
+  .put(authGuard, adminGuard, updatePostCategory) // Kategoriyi güncelle
+  .delete(authGuard, adminGuard, deletePostCategory); // Kategoriyi sil
 
-export default router;
+// CommonJS modül sistemi için export
+module.exports = router;

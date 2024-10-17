@@ -1,21 +1,21 @@
-import { uploadPicture } from "../middleware/uploadPictureMiddleware.js";
-import Comment from "../models/Comment.js";
-import Post from "../models/Post.js";
-import User from "../models/User.js";
-import { fileRemover } from "../utils/fileRemover.js";
+const { uploadPicture } = require("../middleware/uploadPictureMiddleware");
+const Comment = require("../models/Comment");
+const Post = require("../models/Post");
+const User = require("../models/User");
+const { fileRemover } = require("../utils/fileRemover");
 
 const registerUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-    // check whether the user exists or not
+    // Kullanıcının var olup olmadığını kontrol et
     let user = await User.findOne({ email });
 
     if (user) {
-      throw new Error("User have already registered");
+      throw new Error("User has already registered");
     }
 
-    // creating a new user
+    // Yeni bir kullanıcı oluştur
     user = await User.create({
       name,
       email,
@@ -47,7 +47,7 @@ const loginUser = async (req, res, next) => {
     }
 
     if (await user.comparePassword(password)) {
-      return res.status(201).json({
+      return res.status(200).json({
         _id: user._id,
         avatar: user.avatar,
         name: user.name,
@@ -69,7 +69,7 @@ const userProfile = async (req, res, next) => {
     let user = await User.findById(req.user._id);
 
     if (user) {
-      return res.status(201).json({
+      return res.status(200).json({
         _id: user._id,
         avatar: user.avatar,
         name: user.name,
@@ -112,7 +112,7 @@ const updateProfile = async (req, res, next) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     if (req.body.password && req.body.password.length < 6) {
-      throw new Error("Password length must be at least 6 character");
+      throw new Error("Password length must be at least 6 characters");
     } else if (req.body.password) {
       user.password = req.body.password;
     }
@@ -140,11 +140,11 @@ const updateProfilePicture = async (req, res, next) => {
     upload(req, res, async function (err) {
       if (err) {
         const error = new Error(
-          "An unknown error occured when uploading " + err.message
+          "An unknown error occurred when uploading " + err.message
         );
         next(error);
       } else {
-        // every thing went well
+        // Her şey yolunda gitti
         if (req.file) {
           let filename;
           let updatedUser = await User.findById(req.user._id);
@@ -229,7 +229,7 @@ const deleteUser = async (req, res, next) => {
     let user = await User.findById(req.params.userId);
 
     if (!user) {
-      throw new Error("User no found");
+      throw new Error("User not found");
     }
 
     const postsToDelete = await Post.find({ user: user._id });
@@ -256,7 +256,7 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-export {
+module.exports = {
   registerUser,
   loginUser,
   userProfile,

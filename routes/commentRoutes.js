@@ -1,20 +1,25 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+
+const {
   createComment,
   deleteComment,
   getAllComments,
   updateComment,
-} from "../controllers/commentControllers.js";
-import { adminGuard, authGuard } from "../middleware/authMiddleware.js";
+} = require("../controllers/commentControllers");
 
+const { adminGuard, authGuard } = require("../middleware/authMiddleware");
+
+// Yorumlar için yönlendirme
 router
   .route("/")
-  .post(authGuard, createComment)
-  .get(authGuard, adminGuard, getAllComments);
+  .post(authGuard, createComment) // Yorum oluştur
+  .get(authGuard, adminGuard, getAllComments); // Tüm yorumları getir
+
 router
   .route("/:commentId")
-  .put(authGuard, updateComment)
-  .delete(authGuard, deleteComment);
+  .put(authGuard, updateComment) // Yorum güncelle
+  .delete(authGuard, deleteComment); // Yorum sil
 
-export default router;
+// CommonJS modül sistemi için export
+module.exports = router;

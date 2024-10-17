@@ -1,7 +1,7 @@
-import { verify } from "jsonwebtoken";
-import User from "../models/User.js";
+const { verify } = require("jsonwebtoken");
+const User = require("../models/User");
 
-export const authGuard = async (req, res, next) => {
+const authGuard = async (req, res, next) => {
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -23,12 +23,17 @@ export const authGuard = async (req, res, next) => {
   }
 };
 
-export const adminGuard = (req, res, next) => {
+const adminGuard = (req, res, next) => {
   if (req.user && req.user.admin) {
     next();
   } else {
-    let error = new Error("Not authorized as an admn");
+    let error = new Error("Not authorized as an admin");
     error.statusCode = 401;
     next(error);
   }
+};
+
+module.exports = {
+  authGuard,
+  adminGuard,
 };

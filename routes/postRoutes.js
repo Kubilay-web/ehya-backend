@@ -1,19 +1,27 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+
+const {
   createPost,
   deletePost,
   getAllPosts,
   getPost,
   updatePost,
-} from "../controllers/postControllers.js";
-import { authGuard, adminGuard } from "../middleware/authMiddleware.js";
+} = require("../controllers/postControllers");
 
-router.route("/").post(authGuard, adminGuard, createPost).get(getAllPosts);
+const { authGuard, adminGuard } = require("../middleware/authMiddleware");
+
+// Postlar için yönlendirme
+router
+  .route("/")
+  .post(authGuard, adminGuard, createPost) // Yeni post oluştur
+  .get(getAllPosts); // Tüm postları getir
+
 router
   .route("/:slug")
-  .put(authGuard, adminGuard, updatePost)
-  .delete(authGuard, adminGuard, deletePost)
-  .get(getPost);
+  .get(getPost) // Belirli bir postu getir
+  .put(authGuard, adminGuard, updatePost) // Postu güncelle
+  .delete(authGuard, adminGuard, deletePost); // Postu sil
 
-export default router;
+// CommonJS modül sistemi için export
+module.exports = router;

@@ -1,6 +1,7 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+
+const {
   registerUser,
   loginUser,
   userProfile,
@@ -8,15 +9,18 @@ import {
   updateProfilePicture,
   getAllUsers,
   deleteUser,
-} from "../controllers/userControllers.js";
-import { adminGuard, authGuard } from "../middleware/authMiddleware.js";
+} = require("../controllers/userControllers");
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
-router.get("/profile", authGuard, userProfile);
-router.put("/updateProfile/:userId", authGuard, updateProfile);
-router.put("/updateProfilePicture", authGuard, updateProfilePicture);
-router.get("/", authGuard, adminGuard, getAllUsers);
-router.delete("/:userId", authGuard, adminGuard, deleteUser);
+const { adminGuard, authGuard } = require("../middleware/authMiddleware");
 
-export default router;
+// Kullanıcı yönlendirme
+router.post("/register", registerUser); // Yeni kullanıcı kaydı
+router.post("/login", loginUser); // Kullanıcı girişi
+router.get("/profile", authGuard, userProfile); // Kullanıcı profili
+router.put("/updateProfile/:userId", authGuard, updateProfile); // Kullanıcı profili güncelle
+router.put("/updateProfilePicture", authGuard, updateProfilePicture); // Profil resmi güncelle
+router.get("/", authGuard, adminGuard, getAllUsers); // Tüm kullanıcıları getir
+router.delete("/:userId", authGuard, adminGuard, deleteUser); // Kullanıcı sil
+
+// CommonJS modül sistemi için export
+module.exports = router;

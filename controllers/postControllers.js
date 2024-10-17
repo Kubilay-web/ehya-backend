@@ -1,8 +1,8 @@
-import { uploadPicture } from "../middleware/uploadPictureMiddleware.js";
-import Post from "../models/Post.js";
-import Comment from "../models/Comment.js";
-import { fileRemover } from "../utils/fileRemover.js";
-import { v4 as uuidv4 } from "uuid";
+const { uploadPicture } = require("../middleware/uploadPictureMiddleware");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const { fileRemover } = require("../utils/fileRemover");
+const { v4: uuidv4 } = require("uuid");
 
 const createPost = async (req, res, next) => {
   try {
@@ -30,7 +30,7 @@ const updatePost = async (req, res, next) => {
     const post = await Post.findOne({ slug: req.params.slug });
 
     if (!post) {
-      const error = new Error("Post aws not found");
+      const error = new Error("Post was not found");
       next(error);
       return;
     }
@@ -52,11 +52,11 @@ const updatePost = async (req, res, next) => {
     upload(req, res, async function (err) {
       if (err) {
         const error = new Error(
-          "An unknown error occured when uploading " + err.message
+          "An unknown error occurred when uploading " + err.message
         );
         next(error);
       } else {
-        // every thing went well
+        // Everything went well
         if (req.file) {
           let filename;
           filename = post.photo;
@@ -64,13 +64,13 @@ const updatePost = async (req, res, next) => {
             fileRemover(filename);
           }
           post.photo = req.file.filename;
-          handleUpdatePostData(req.body.document);
+          await handleUpdatePostData(req.body.document); // await ekleyin
         } else {
           let filename;
           filename = post.photo;
           post.photo = "";
           fileRemover(filename);
-          handleUpdatePostData(req.body.document);
+          await handleUpdatePostData(req.body.document); // await ekleyin
         }
       }
     });
@@ -154,7 +154,7 @@ const getAllPosts = async (req, res, next) => {
     const filter = req.query.searchKeyword;
     const categories = req.query.categories
       ? req.query.categories.split(",")
-      : []; // Expecting categories to be comma-seperated
+      : []; // Expecting categories to be comma-separated
 
     let where = {};
 
@@ -206,4 +206,11 @@ const getAllPosts = async (req, res, next) => {
   }
 };
 
-export { createPost, updatePost, deletePost, getPost, getAllPosts };
+// CommonJS modül sistemi için export
+module.exports = {
+  createPost,
+  updatePost,
+  deletePost,
+  getPost,
+  getAllPosts,
+};

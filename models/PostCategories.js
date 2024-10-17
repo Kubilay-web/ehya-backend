@@ -1,11 +1,16 @@
-import { Schema, model } from "mongoose";
+const mongoose = require("mongoose");
+const { Schema, model } = mongoose;
 
+// Gönderi Kategorileri Şeması
 const PostCategoriesSchema = new Schema(
   {
-    title: { type: String, required: true },
+    title: { type: String, required: true }, // Kategori başlığı
   },
-  { timestamps: true }
+  { timestamps: true } // Oluşturulma ve güncellenme tarihleri
 );
 
+// Gönderi Kategorileri Modeli
 const PostCategories = model("PostCategories", PostCategoriesSchema);
-export default PostCategories;
+
+// CommonJS modül sistemi için export
+module.exports = PostCategories;

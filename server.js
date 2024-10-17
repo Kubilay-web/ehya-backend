@@ -6,7 +6,7 @@ import cors from "cors";
 import {
   errorResponserHandler,
   invalidPathHandler,
-} from "./middleware/errorHandler";
+} from "./middleware/errorHandler.js";
 
 // Routes
 import userRoutes from "./routes/userRoutes";

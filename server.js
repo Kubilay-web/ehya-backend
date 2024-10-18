@@ -13,6 +13,8 @@ const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const postCategoriesRoutes = require("./routes/postCategoriesRoutes");
+const searchRoutes = require("./routes/search");
+const subscriberRoutes = require("./routes/subscriberRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -40,6 +42,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/post-categories", postCategoriesRoutes);
+app.use("/api/search", searchRoutes);
+app.use("/api", subscriberRoutes); // Abone routes'u
 
 // Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
